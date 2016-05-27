@@ -1,0 +1,1 @@
+public var reporter = Reporter()
