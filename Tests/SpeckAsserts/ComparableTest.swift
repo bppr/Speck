@@ -74,3 +74,23 @@ class ComparableTest: XCTestCase {
 		XCTAssertEqual(expectation.status, Status.Fail)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension ComparableTest {
+  static var allTests: [(String, (ComparableTest) -> () throws -> Void)] {
+    return [
+      ("test_GreaterThanPassesWhenSubjectIsGreater", test_GreaterThanPassesWhenSubjectIsGreater),
+      ("test_GreaterThanFailsWhenSubjectIsLesser", test_GreaterThanFailsWhenSubjectIsLesser),
+      ("test_LessThanPassesWhenSubjectIsLesser", test_LessThanPassesWhenSubjectIsLesser),
+      ("test_LessThanFailsWhenSubjectIsGreater", test_LessThanFailsWhenSubjectIsGreater),
+      ("test_GreaterThanOrEqualPassesWhenSubjectIsGreater", test_GreaterThanOrEqualPassesWhenSubjectIsGreater),
+      ("test_GreaterThanOrEqualPassesWhenSubjectIsEqual", test_GreaterThanOrEqualPassesWhenSubjectIsEqual),
+      ("test_GreaterThanOrEqualFailsWhenSubjectIsLesser", test_GreaterThanOrEqualFailsWhenSubjectIsLesser),
+      ("test_LessThanOrEqualPassesWhenSubjectIsLess", test_LessThanOrEqualPassesWhenSubjectIsLess),
+      ("test_LessThanOrEqualPassesWhenSubjectIsEqual", test_LessThanOrEqualPassesWhenSubjectIsEqual),
+      ("test_LessThanOrEqualFailsWhenSubjectIsGreater", test_LessThanOrEqualFailsWhenSubjectIsGreater)
+    ]
+  }
+}
+#endif

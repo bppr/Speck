@@ -36,3 +36,16 @@ class ExampleTest: XCTestCase {
 		XCTAssertEqual(example.status, Status.Pass)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension ExampleTest {
+  static var allTests: [(String, (ExampleTest) -> () throws -> Void)] {
+    return [
+      ("test_addsAnExpectation", test_addsAnExpectation),
+      ("test_ExampleStatusIsFailWhenExampleContainsFailingExpectations", test_ExampleStatusIsFailWhenExampleContainsFailingExpectations),
+      ("test_ExampleStatusIsPassWhenExampleContainsOnlyPassingExpectations", test_ExampleStatusIsPassWhenExampleContainsOnlyPassingExpectations)
+    ]
+  }
+}
+#endif

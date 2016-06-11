@@ -62,3 +62,19 @@ class ReporterTest: XCTestCase {
 		XCTAssertEqual(handlerCalledWith?.description, example.description)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension ReporterTest {
+  static var allTests: [(String, (ReporterTest) -> () throws -> Void)] {
+    return [
+      ("test_addsAndTriggersStartEventHandler", test_addsAndTriggersStartEventHandler),
+      ("test_addsAndTriggersFinishEventHandler", test_addsAndTriggersFinishEventHandler),
+      ("test_addsAndTriggersOnSuiteStartHandler", test_addsAndTriggersOnSuiteStartHandler),
+      ("test_addsAndTriggersOnSuiteFinishHandler", test_addsAndTriggersOnSuiteFinishHandler),
+      ("test_addsAndTriggersOnExampleStartHandler", test_addsAndTriggersOnExampleStartHandler),
+      ("test_addsAndTriggersOnExampleFinishHandler", test_addsAndTriggersOnExampleFinishHandler)
+    ]
+  }
+}
+#endif

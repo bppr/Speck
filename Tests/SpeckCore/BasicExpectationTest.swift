@@ -1,7 +1,7 @@
 @testable import SpeckCore
 import XCTest
 
-class ExpectationTest: XCTestCase {
+class BasicExpectationTest: XCTestCase {
 	func test_assertTrueSetsResultStatusToTrue() {
 		let expectation = BasicExpectation()
 		expectation.assert(true, msg: "passed")
@@ -34,3 +34,17 @@ class ExpectationTest: XCTestCase {
 		XCTAssertEqual(expectation.status, Status.Fail)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension BasicExpectationTest {
+  static var allTests: [(String, (BasicExpectationTest) -> () throws -> Void)] {
+    return [
+      ("test_assertTrueSetsResultStatusToTrue", test_assertTrueSetsResultStatusToTrue),
+      ("test_assertFalseSetsResultStatusToFail", test_assertFalseSetsResultStatusToFail),
+      ("test_reversedAssertFalseSetsResultStatusToPass", test_reversedAssertFalseSetsResultStatusToPass),
+      ("test_reversedAssertTrueSetsResultStatusToFail", test_reversedAssertTrueSetsResultStatusToFail)
+    ]
+  }
+}
+#endif

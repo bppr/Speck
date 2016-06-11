@@ -32,3 +32,17 @@ class CollectionTest: XCTestCase {
 		XCTAssertEqual(expectation.status, Status.Fail)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension CollectionTest {
+  static var allTests: [(String, (CollectionTest) -> () throws -> Void)] {
+    return [
+      ("test_startWithPassesWhenFirstElementMatches", test_startWithPassesWhenFirstElementMatches),
+      ("test_startWithFailsWhenFirstElementDoesNotMatch", test_startWithFailsWhenFirstElementDoesNotMatch),
+      ("test_endWithPassesWhenLastElementMatches", test_endWithPassesWhenLastElementMatches),
+      ("test_endWithFailsWhenLastElementDoesNotMatch", test_endWithFailsWhenLastElementDoesNotMatch)
+    ]
+  }
+}
+#endif
