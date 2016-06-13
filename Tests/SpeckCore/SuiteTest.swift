@@ -36,3 +36,17 @@ class SuiteTest: XCTestCase {
 		XCTAssertEqual(suite.status, Status.Fail)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension SuiteTest {
+  static var allTests: [(String, (SuiteTest) -> () throws -> Void)] {
+    return [
+      ("test_addSuiteSetsTheParentOnTheAddedSuite", test_addSuiteSetsTheParentOnTheAddedSuite),
+      ("test_addExampleAddsAnExampleToTheParent", test_addExampleAddsAnExampleToTheParent),
+      ("test_StatusIsPassingByDefault", test_StatusIsPassingByDefault),
+      ("test_StatusIsFailingWhenContainingFailingExamples", test_StatusIsFailingWhenContainingFailingExamples)
+    ]
+  }
+}
+#endif

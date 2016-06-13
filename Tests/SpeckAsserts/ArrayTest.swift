@@ -41,3 +41,18 @@ class ArrayTest: XCTestCase {
 		XCTAssertEqual(expectation.status, Status.Fail)
 	}
 }
+
+#if _runtime(_ObjC)
+#else
+extension ArrayTest {
+  static var allTests: [(String, (ArrayTest) -> () throws -> Void)] {
+    return [
+      ("test_equalsPassesIfArraysAreEqual", test_equalsPassesIfArraysAreEqual),
+      ("test_equalsPassesIfBothArraysAreNil", test_equalsPassesIfBothArraysAreNil),
+      ("test_equalsFailsIfArraysArentEqual", test_equalsFailsIfArraysArentEqual),
+      ("test_equalsFailsIfSubjectArrayIsNil", test_equalsFailsIfSubjectArrayIsNil),
+      ("test_equalsFailsIfObjectArrayIsNil", test_equalsFailsIfObjectArrayIsNil)
+    ]
+  }
+}
+#endif

@@ -1,5 +1,21 @@
 import SpeckCore
 
+#if _runtime(_ObjC)
+#else
+// FIXME: Enable if non-objc methods are implemented.
+extension String {
+  func hasPrefix(_ prefix: String) -> Bool {
+    let end = index(startIndex, offsetBy: prefix.length)
+    return self[startIndex ..< end] == prefix
+  }
+
+  func hasSuffix(_ suffix: String) -> Bool {
+    let start = index(endIndex, offsetBy: -suffix.length)
+    return self[start ..< endIndex] == suffix
+  }
+}
+#endif
+
 public protocol StringExpectable {
 	var asString: String { get }
 }
