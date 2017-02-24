@@ -4,21 +4,21 @@
 let context = Context()
 
 @discardableResult
-public func describe(_ description: String, _ fn: Suite.Function) -> Suite {
+public func describe(_ description: String, _ fn: @escaping Suite.Function) -> Suite {
 	let suite = Suite(description: description, fn: fn)
 	try! context.register(suite: suite)
 	return suite
 }
 
-public func it(_ description: String, fn: Example.Function) {
+public func it(_ description: String, fn: @escaping Example.Function) {
 	context.currentSuite.add(example: Example(description: description, fn: fn))
 }
 
-public func before(_ fn: Suite.Function) {
+public func before(_ fn: @escaping Suite.Function) {
 	context.currentSuite.beforeHooks.append(fn)
 }
 
-public func after(_ fn: Suite.Function) {
+public func after(_ fn: @escaping Suite.Function) {
 	context.currentSuite.afterHooks.append(fn)
 }
 

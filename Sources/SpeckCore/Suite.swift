@@ -11,10 +11,10 @@ public class Suite: HasStatus {
 	public weak var parent: Suite?
 
 	public var status: Status {
-		return examples.contains(Status.equals(.Fail)) ? .Fail : .Pass
+		return examples.contains(where: Status.equals(.Fail)) ? .Fail : .Pass
 	}
 
-	public init(description: String, fn: Function) {
+	public init(description: String, fn: @escaping Function) {
 		self.description = description
 		self.fn = fn
 	}

@@ -6,14 +6,14 @@ public extension Expectation where
 {
 	func to(contain element: Subject.Iterator.Element) {
 		self.assert(
-			subject?.contains({ $0 == element }) ?? false,
+			subject?.contains(where: { $0 == element }) ?? false,
 			msg: "contain \(element)"
 		)
 	}
 
 	func to(contain element: Subject.Iterator.Element?) {
 		self.assert(
-			subject?.contains({ $0 == element }) ?? false,
+			subject?.contains(where: { $0 == element }) ?? false,
 			msg: "contain \(element)"
 		)
 	}

@@ -19,27 +19,27 @@ public class Reporter {
 	var onExampleStartHandlers = [(Example) -> Void]()
 	var onExampleFinishHandlers = [(Example) -> Void]()
 
-	public func onStart(_ cb: (Void) -> Void) {
+	public func onStart(_ cb: @escaping (Void) -> Void) {
 		onStartHandlers.append(cb)
 	}
 
-	public func onFinish(_ cb: (Void) -> Void) {
+	public func onFinish(_ cb: @escaping (Void) -> Void) {
 		onFinishHandlers.append(cb)
 	}
 
-	public func onSuiteStart(_ cb: (Suite) -> Void) {
+	public func onSuiteStart(_ cb: @escaping (Suite) -> Void) {
 		onSuiteStartHandlers.append(cb)
 	}
 
-	public func onSuiteFinish(_ cb: (Suite) -> Void) {
+	public func onSuiteFinish(_ cb: @escaping (Suite) -> Void) {
 		onSuiteFinishHandlers.append(cb)
 	}
 
-	public func onExampleFinish(_ cb: (Example) -> Void) {
+	public func onExampleFinish(_ cb: @escaping (Example) -> Void) {
 		onExampleFinishHandlers.append(cb)
 	}
 
-	public func onExampleStart(_ cb: (Example) -> Void) {
+	public func onExampleStart(_ cb: @escaping (Example) -> Void) {
 		onExampleStartHandlers.append(cb)
 	}
 

@@ -28,7 +28,7 @@ public class Expectation<Subject>: BasicExpectation {
 			subjectAsString = "\(subject)"
 		} else {
 			// remove 'Optional' to give terse type information
-			let typeStr = "\(subject.dynamicType)"
+			let typeStr = "\(type(of: subject))"
 			let startIdx = typeStr.index(typeStr.startIndex, offsetBy: 8)
 
 			subjectAsString = "nil \(typeStr[startIdx..<typeStr.endIndex])"

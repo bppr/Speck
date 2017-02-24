@@ -7,10 +7,10 @@ public class Example : HasStatus {
 	public var expectations = [BasicExpectation]()
 
 	public var status: Status {
-		return expectations.contains(Status.equals(.Fail)) ? .Fail : .Pass
+		return expectations.contains(where: Status.equals(.Fail)) ? .Fail : .Pass
 	}
 
-	public init(description: String, fn: Function) {
+	public init(description: String, fn: @escaping Function) {
 		self.description = description
 		self.fn = fn
 	}

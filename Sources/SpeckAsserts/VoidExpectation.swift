@@ -11,7 +11,7 @@ public class VoidExpectation: BasicExpectation {
 	}
 
 	public init(
-		subject: Function,
+		subject: @escaping Function,
 		reversed: Bool = false,
 		file: String = #file,
 		line: UInt = #line
@@ -43,7 +43,7 @@ public class VoidExpectation: BasicExpectation {
 		}
 	}
 
-	public func to<T:ErrorProtocol>(throwError errType: T.Type) {
+	public func to<T:Error>(throwError errType: T.Type) {
 		do {
 			try self.subject()
 			self.assert(false, msg: "throw \(errType) error; no error was thrown")
@@ -54,12 +54,12 @@ public class VoidExpectation: BasicExpectation {
 		} catch let err {
 			self.assert(
 				false,
-				msg: "throw \(errType) error, got \(err.dynamicType).\(err)"
+				msg: "throw \(errType) error, got \(type(of: err)).\(err)"
 			)
 		}
 	}
 
-	public func to<T:ErrorProtocol>(throwError errType: T) {
+	public func to<T:Error>(throwError errType: T) {
 		do {
 			try self.subject()
 			self.assert(false, msg: "throw \(errType) error; no error was thrown")
@@ -70,7 +70,7 @@ public class VoidExpectation: BasicExpectation {
 		} catch let err {
 			self.assert(
 				false,
-				msg: "throw \(errType) error, got \(err.dynamicType).\(err)"
+				msg: "throw \(errType) error, got \(type(of: err)).\(err)"
 			)
 		}
 	}

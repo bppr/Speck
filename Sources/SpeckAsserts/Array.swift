@@ -17,7 +17,7 @@ public extension Expectation where
 	func to(equal other: [Subject.Element]?) {
 		let equals: Bool
 
-		if let subject = subject, other = other {
+		if let subject = subject, let other = other {
 			equals = subject.asArray == other
 		} else {
 			equals = subject == nil && other == nil

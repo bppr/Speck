@@ -1,6 +1,6 @@
 var nullCursor = Cursor(file: "unknown", line: 0)
 
-public class BasicExpectation: HasStatus {
+open class BasicExpectation: HasStatus {
 	public var message: String = ""
 	public var status: Status = .Pending
 	public var reversed: Bool = false
@@ -14,7 +14,7 @@ public class BasicExpectation: HasStatus {
 		self.cursor = cursor
 	}
 
-	public func assert(_ condition: Bool, msg: String) {
+	open func assert(_ condition: Bool, msg: String) {
 		self.status = condition != reversed ? .Pass : .Fail
 		self.message = msg
 	}

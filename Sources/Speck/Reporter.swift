@@ -107,7 +107,7 @@ public class Reporter {
 	}
 
 	func runCount() -> Int {
-		return [passedCount, failedExamples.count, pendingCount].reduce(0, combine: +)
+		return [passedCount, failedExamples.count, pendingCount].reduce(0, +)
 	}
 }
 

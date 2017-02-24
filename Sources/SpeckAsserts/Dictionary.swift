@@ -19,7 +19,7 @@ public extension Expectation where
 	func to(equal other: [Subject.Key: Subject.Value]?) {
 		let equals: Bool
 
-		if let subject = subject, other = other {
+		if let subject = subject, let other = other {
 			equals = subject.asDict == other
 		} else {
 			equals = subject == nil && other == nil

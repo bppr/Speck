@@ -4,7 +4,7 @@ Speck
 _A tiny, Linux-compatible, pure-Swift BDD framework for Swift projects.
 (insert bird-pun)_
 
-**Current Version:** 0.0.1
+**Current Version:** 0.0.2 | Swift 3.0.2
 
 [Documentation](/Docs/00-main.md) | [Quick Start](/Docs/02-running.md) | [Example Project](https://github.com/bppr/Speck.Example)
 
