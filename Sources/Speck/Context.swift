@@ -17,7 +17,7 @@ class Context {
 		suiteStack.removeLast()
 	}
 
-	func with(example: Example, do fn: (Void) throws -> Void) throws {
+	func with(example: Example, do fn: () throws -> Void) throws {
 		currentExample = example
 		try fn()
 		currentExample = nullExample

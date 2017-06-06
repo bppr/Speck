@@ -16,7 +16,7 @@ func runSuite(suite: Suite) throws {
 	reporter.trigger(event: .SuiteFinish(suite))
 }
 
-func runExample(_ example: Example, _ suite: Suite) throws -> (Void) throws -> Void {
+func runExample(_ example: Example, _ suite: Suite) throws -> () throws -> Void {
 	return {
 		reporter.trigger(event: .ExampleStart(example))
 
