@@ -1,7 +1,7 @@
 import SpeckCore
 
 public class VoidExpectation: BasicExpectation {
-	public typealias Function = (Void) throws -> Void
+	public typealias Function = () throws -> Void
 
 	let subject: Function
 
@@ -27,7 +27,7 @@ public class VoidExpectation: BasicExpectation {
 	}
 
 	public func to<T:Equatable>(
-		change value: (Void) throws -> T?,
+		change value: () throws -> T?,
 		to newValue: T?
 	) {
 		do {
@@ -36,7 +36,7 @@ public class VoidExpectation: BasicExpectation {
 
 			self.assert(
 				value == newValue,
-				msg: "to change value to \(newValue), got \(value)"
+				msg: "to change value to \(String(describing: newValue)), got \(String(describing: value))"
 			)
 		} catch let err {
 			self.assert(false, msg: "error: \(err)")

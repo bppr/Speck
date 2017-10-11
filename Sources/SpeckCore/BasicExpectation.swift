@@ -1,4 +1,4 @@
-var nullCursor = Cursor(file: "unknown", line: 0)
+let nullCursor = Cursor(file: "unknown", line: 0)
 
 open class BasicExpectation: HasStatus {
 	public var message: String = ""

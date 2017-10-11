@@ -10,7 +10,6 @@ public extension Expectation where
 }
 
 public extension Expectation where
-	Subject: Collection,
 	Subject.Iterator.Element: Equatable,
 	Subject: BidirectionalCollection {
 	
