@@ -1,5 +1,5 @@
 public class Suite: HasStatus {
-	public typealias Function = (Void) throws -> Void
+	public typealias Function = () throws -> Void
 
 	public let description: String
 	public let fn: Function

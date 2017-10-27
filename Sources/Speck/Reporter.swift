@@ -13,7 +13,7 @@ var pwd: String = {
 
 func fileMinusPwd(_ file: String) -> String {
 	let startIdx = file.index(file.startIndex, offsetBy: pwd.characters.count + 1)
-	return file[startIdx..<file.endIndex]
+	return String(file[startIdx..<file.endIndex])
 }
 
 public class Printer {

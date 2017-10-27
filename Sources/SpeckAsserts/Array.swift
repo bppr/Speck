@@ -23,7 +23,7 @@ public extension Expectation where
 			equals = subject == nil && other == nil
 		}
 
-		self.assert(equals, msg: "equal \(other)")
+		self.assert(equals, msg: "equal \(String(describing: other))")
 	}
 
 	func to(equal other: [Subject.Element]) {

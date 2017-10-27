@@ -14,7 +14,7 @@ public extension Expectation where
 	func to(contain element: Subject.Iterator.Element?) {
 		self.assert(
 			subject?.contains(where: { $0 == element }) ?? false,
-			msg: "contain \(element)"
+			msg: "contain \(String(describing: element))"
 		)
 	}
 }
