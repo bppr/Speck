@@ -10,8 +10,8 @@ public class Reporter {
 
 	public init() {}
 
-	var onStartHandlers = [(Void) -> Void]()
-	var onFinishHandlers = [(Void) -> Void]()
+	var onStartHandlers = [() -> Void]()
+	var onFinishHandlers = [() -> Void]()
 
 	var onSuiteStartHandlers = [(Suite) -> Void]()
 	var onSuiteFinishHandlers = [(Suite) -> Void]()
@@ -19,11 +19,11 @@ public class Reporter {
 	var onExampleStartHandlers = [(Example) -> Void]()
 	var onExampleFinishHandlers = [(Example) -> Void]()
 
-	public func onStart(_ cb: @escaping (Void) -> Void) {
+	public func onStart(_ cb: @escaping () -> Void) {
 		onStartHandlers.append(cb)
 	}
 
-	public func onFinish(_ cb: @escaping (Void) -> Void) {
+	public func onFinish(_ cb: @escaping () -> Void) {
 		onFinishHandlers.append(cb)
 	}
 

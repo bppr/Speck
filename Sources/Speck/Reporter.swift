@@ -13,7 +13,26 @@ var pwd: String = {
 
 func fileMinusPwd(_ file: String) -> String {
 	let startIdx = file.index(file.startIndex, offsetBy: pwd.characters.count + 1)
-	return file[startIdx..<file.endIndex]
+	return String(file[startIdx..<file.endIndex])
+}
+
+public class ColorizedString {
+	enum Color {
+		case Default, Red, Green, Yellow
+		
+		var colorCode: Int {
+			switch self {
+			case .Default: return 39
+			case .Red:     return 31
+			case .Green:   return 32
+			case .Yellow:  return 33
+			}
+		}
+	}
+	
+	static func create(msg: String, color: Color) -> String {
+		return "\u{1b}[\(color.colorCode)m\(msg)\u{1b}[39m"
+	}
 }
 
 public class Printer {
@@ -57,7 +76,7 @@ public class Reporter {
 		printer.lineBreak()
 
 		for ex in failedExamples {
-			printer.call("× \"\(ex.description)\" failed:")
+			printer.call(ColorizedString.create(msg: "× \"\(ex.description)\" failed:", color: .Red))
 			printer.indent()
 
 			for exp in ex.expectations.filter(Status.equals(.Fail)) {
@@ -84,13 +103,13 @@ public class Reporter {
 	func printExample(example: Example) {
 		if example.status == .Pass {
 			passedCount += 1
-			printer.call("✓ \(example.description)")
+			printer.call(ColorizedString.create(msg: "✓ \(example.description)", color: .Green))
 		} else if example.status == .Fail {
 			failedExamples.append(example)
-			printer.call("× \(example.description)")
+			printer.call(ColorizedString.create(msg: "× \(example.description)", color: .Red))
 		} else {
 			pendingCount += 1
-			printer.call("★ \(example.description)")
+			printer.call(ColorizedString.create(msg: "★ \(example.description)", color: .Yellow))
 		}
 	}
 
@@ -100,8 +119,8 @@ public class Reporter {
 		printer.call(spec.description)
 		printer.indent()
 
-		for ex in spec.examples { printExample(example: ex) }
-		for s in spec.children { printSpec(spec: s) }
+		spec.examples.forEach(printExample)
+		spec.children.forEach(printSpec)
 
 		printer.dedent()
 	}

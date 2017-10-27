@@ -13,7 +13,6 @@ extension Dictionary : DictionaryExpectable {
 
 public extension Expectation where
 	Subject: DictionaryExpectable,
-	Subject.Key: Equatable,
 	Subject.Value: Equatable {
 
 	func to(equal other: [Subject.Key: Subject.Value]?) {
@@ -25,7 +24,7 @@ public extension Expectation where
 			equals = subject == nil && other == nil
 		}
 
-		assert(equals, msg: "equal \(other)")
+		assert(equals, msg: "equal \(String(describing: other))")
 	}
 
 	func to(equal other: [Subject.Key: Subject.Value]) {
