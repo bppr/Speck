@@ -8,7 +8,7 @@ class ArrayTest: XCTestCase {
 		let expectation = Expectation(subject: ["an", "array"])
 		expectation.to(equal: ["an", "array"])
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_equalsPassesIfBothArraysAreNil() {
@@ -16,14 +16,14 @@ class ArrayTest: XCTestCase {
 		let expectation = Expectation(subject: nilArray)
 		expectation.to(equal: nil)
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_equalsFailsIfArraysArentEqual() {
 		let expectation = Expectation(subject: ["a"])
 		expectation.to(equal: ["b"])
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 
 	func test_equalsFailsIfSubjectArrayIsNil() {
@@ -31,14 +31,14 @@ class ArrayTest: XCTestCase {
 		let expectation = Expectation(subject: nilArray)
 		expectation.to(equal: [1])
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 
 	func test_equalsFailsIfObjectArrayIsNil() {
 		let expectation = Expectation(subject: [1])
 		expectation.to(equal: nil)
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 }
 

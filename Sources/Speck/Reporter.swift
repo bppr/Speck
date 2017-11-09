@@ -1,132 +1,110 @@
 import SpeckCore
-#if os(OSX)
-import Darwin.C
-#else
-import Glibc
-#endif
-
-private let maxNameLength = Int(MAXNAMLEN)
-var pwd: String = {
-	var buf = Array<Int8>(repeating: 0, count: maxNameLength)
-	return String(cString: getcwd(&buf, maxNameLength))
-}()
-
-func fileMinusPwd(_ file: String) -> String {
-	let startIdx = file.index(file.startIndex, offsetBy: pwd.characters.count + 1)
-	return String(file[startIdx..<file.endIndex])
-}
-
-public class ColorizedString {
-	enum Color {
-		case Default, Red, Green, Yellow
-		
-		var colorCode: Int {
-			switch self {
-			case .Default: return 39
-			case .Red:     return 31
-			case .Green:   return 32
-			case .Yellow:  return 33
-			}
-		}
-	}
-	
-	static func create(msg: String, color: Color) -> String {
-		return "\u{1b}[\(color.colorCode)m\(msg)\u{1b}[39m"
-	}
-}
-
-public class Printer {
-  public var out: (String, Bool) -> Void = { str, newline in
-    let msg = newline ? str + "\n" : str
-    fputs(msg, stdout)
-  }
-
-  public var indentLevel = 0
-
-  func call(_ output: String, newline: Bool = true) {
-    var indentation = ""
-
-    if(indentLevel > 0) {
-      for _ in 1...indentLevel { indentation += "  " }
-    }
-
-    out(indentation + output, newline)
-  }
-
-  func lineBreak() { out("", true) }
-  func indent() { indentLevel += 1 }
-  func dedent() { indentLevel -= 1 }
-}
+import SpeckSystem
 
 public class Reporter {
-	public var printer = Printer()
-	var passedCount = 0
-	var failedExamples : [Example] = []
-	var pendingCount = 0
-	var offset = 0
+  public var printer = Printer()
+  var timer = Timer()
+  var passedCount = 0
+  var pendingCount = 0
+  var failedExamples: [Example] = []
 
-	public static func listen(_ dispatch: SpeckCore.Reporter) {
-		let reporter = Reporter()
+  var runCount: Int {
+    return [passedCount, failedExamples.count, pendingCount].reduce(0, +)
+  }
 
-		dispatch.onFinish(reporter.finished)
-		dispatch.onSuiteFinish(reporter.suiteFinished)
-	}
+  public static func listen(_ dispatch: SpeckCore.Reporter) {
+    let reporter = Reporter()
 
-	public func finished() {
-		printer.lineBreak()
+    dispatch.onStart(reporter.timer.start)
+    dispatch.onFinish(reporter.reportResults)
 
-		for ex in failedExamples {
-			printer.call(ColorizedString.create(msg: "× \"\(ex.description)\" failed:", color: .Red))
-			printer.indent()
+    dispatch.onSuiteStart(reporter.onSuiteStart)
+    dispatch.onSuiteFinish(reporter.onSuiteFinish)
 
-			for exp in ex.expectations.filter(Status.equals(.Fail)) {
-				printer.call("\(exp.message) (\(fileMinusPwd(exp.cursor.file)):\(exp.cursor.line))")
-			}
+    dispatch.onExampleFinish(reporter.onExampleFinish)
+  }
 
-			printer.lineBreak()
+  func onSuiteStart(suite: Suite) {
+    let suiteIsRoot = suite.parent == rootSuite,
+      parentHasExamples = suite.parent?.examples.isEmpty ?? true,
+      suiteIsFirstChild = (suite.parent?.children.index(of: suite) ?? 0) == 0
 
-			printer.dedent()
-		}
+    if suiteIsRoot || (!parentHasExamples || !suiteIsFirstChild) {
+      printer.lineBreak()
+    }
 
-		printer.call(
-			":: RESULTS :: " +
-			"✓ \(passedCount)/\(runCount()) examples passed :: " +
-			"× \(failedExamples.count) failed :: " +
-			"★ \(pendingCount) pending\n"
-		)
-	}
+    printer.call(suite.description)
+    printer.indent()
+  }
 
-	public func suiteFinished(spec: Suite) {
-		if spec.parent == rootSuite { printSpec(spec: spec) }
-	}
+  func onSuiteFinish(suite: Suite) {
+    if suite.parent == rootSuite {
+      printer.lineBreak()
+      printer.call("\(suite.allExamples.count) examples", formatSeconds(suite.elapsedTime))
+    }
 
-	func printExample(example: Example) {
-		if example.status == .Pass {
-			passedCount += 1
-			printer.call(ColorizedString.create(msg: "✓ \(example.description)", color: .Green))
-		} else if example.status == .Fail {
-			failedExamples.append(example)
-			printer.call(ColorizedString.create(msg: "× \(example.description)", color: .Red))
-		} else {
-			pendingCount += 1
-			printer.call(ColorizedString.create(msg: "★ \(example.description)", color: .Yellow))
-		}
-	}
+    printer.dedent()
+  }
 
-	func printSpec(spec: Suite) {
-		if spec.parent == rootSuite { printer.lineBreak() }
+  func onExampleFinish(example: Example) {
+    if example.status == .pass {
+      passedCount += 1
+      printer.call(Color.green("✓ \(example.description)"), Color.none(formatSeconds(example.elapsedTime)))
+    } else if example.status == .fail {
+      failedExamples.append(example)
+      printer.call(Color.red("× \(example.description)"), Color.none(formatSeconds(example.elapsedTime)))
+    } else {
+      pendingCount += 1
+      printer.call(Color.yellow("★ \(example.description)"), Color.none(formatSeconds(example.elapsedTime)))
+    }
+  }
 
-		printer.call(spec.description)
-		printer.indent()
+  public func reportResults() {
+    self.timer.finish()
 
-		spec.examples.forEach(printExample)
-		spec.children.forEach(printSpec)
+    printer.lineBreak()
 
-		printer.dedent()
-	}
+    for ex in failedExamples {
+      printer.call(Color.red("× \"\(ex.description)\" failed:"))
+      printer.indent()
 
-	func runCount() -> Int {
-		return [passedCount, failedExamples.count, pendingCount].reduce(0, +)
-	}
+      for exp in ex.expectations.filter(Status.isFailing) {
+        printer.call(exp.message, "(./\(fileMinusPwd(exp.cursor.file)):\(exp.cursor.line))")
+      }
+
+      printer.lineBreak()
+      printer.dedent()
+    }
+
+    printer.call(
+      ":: RESULTS ::",
+      Color.green("✓ \(passedCount)/\(runCount) examples passed ::"),
+      Color.red("× \(failedExamples.count) failed ::"),
+      Color.yellow("★ \(pendingCount) pending"),
+      formatSeconds(self.timer.elapsedTime),
+      "\n"
+    )
+  }
+
+  func formatSeconds(_ elapsedTime: Int?) -> String {
+    guard let elapsedTime = elapsedTime else { return "" }
+
+    let time = Double(elapsedTime)
+
+    if time < 100_000 {
+      return "(\(time / 1_000)ms)"
+    }
+
+    let roundedToThousandth = Math.round(time, toPlaces: 3)
+    let convertedToSeconds = roundedToThousandth * 1e-6
+
+    return "(\(convertedToSeconds)s)"
+  }
 }
 
+func fileMinusPwd(_ file: String) -> String {
+  let offset = SpeckSystem.cwd.characters.count + 1
+  let startIdx = file.index(file.startIndex, offsetBy: offset)
+
+  return String(file[startIdx..<file.endIndex])
+}

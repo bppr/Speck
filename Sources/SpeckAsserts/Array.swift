@@ -1,35 +1,35 @@
 import SpeckCore
 
 public protocol ArrayExpectable {
-	associatedtype Element
+  associatedtype Element
 
-	var asArray: [Element] { get }
+  var asArray: [Element] { get }
 }
 
-extension Array : ArrayExpectable {
-	public var asArray: [Element] { return self }
+extension Array: ArrayExpectable {
+  public var asArray: [Element] { return self }
 }
 
 public extension Expectation where
-	Subject : ArrayExpectable,
-	Subject.Element: Equatable
-{
-	func to(equal other: [Subject.Element]?) {
-		let equals: Bool
+  Subject: ArrayExpectable,
+  Subject.Element: Equatable {
 
-		if let subject = subject, let other = other {
-			equals = subject.asArray == other
-		} else {
-			equals = subject == nil && other == nil
-		}
+  func to(equal other: [Subject.Element]?) {
+    let equals: Bool
 
-		self.assert(equals, msg: "equal \(String(describing: other))")
-	}
+    if let subject = subject, let other = other {
+      equals = subject.asArray == other
+    } else {
+      equals = subject == nil && other == nil
+    }
 
-	func to(equal other: [Subject.Element]) {
-		self.assert(
-			subject != nil && subject!.asArray == other,
-			msg: "equal \(other)"
-		)
-	}
+    self.assert(equals, msg: "equal \(String(describing: other))")
+  }
+
+  func to(equal other: [Subject.Element]) {
+    self.assert(
+      subject != nil && subject!.asArray == other,
+      msg: "equal \(other)"
+    )
+  }
 }

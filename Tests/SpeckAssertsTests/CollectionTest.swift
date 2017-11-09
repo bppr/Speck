@@ -8,28 +8,28 @@ class CollectionTest: XCTestCase {
 		let expectation = Expectation(subject: [1, 2, 3])
 		expectation.to(startWith: 1)
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_startWithFailsWhenFirstElementDoesNotMatch() {
 		let expectation = Expectation(subject: [Int]())
 		expectation.to(startWith: 2)
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 
 	func test_endWithPassesWhenLastElementMatches() {
 		let expectation = Expectation(subject: [1, 2, 3])
 		expectation.to(endWith: 3)
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_endWithFailsWhenLastElementDoesNotMatch() {
 		let expectation = Expectation(subject: [1, 2, 3])
 		expectation.to(endWith: 1)
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 }
 

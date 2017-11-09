@@ -5,54 +5,57 @@ import Glibc
 #endif
 
 func runSuite(suite: Suite) throws {
-	reporter.trigger(event: .SuiteStart(suite))
+  reporter.trigger(event: .suiteStart(suite))
 
-	for example in suite.examples {
-		try context.with(example: example, do: runExample(example, suite))
-	}
+  try suite.timer.measure {
+    for example in suite.examples {
+      try context.with(example: example, do: runExample(example, suite))
+    }
 
-	for child in suite.children { try runSuite(suite: child) }
+    for child in suite.children { try runSuite(suite: child) }
+  }
 
-	reporter.trigger(event: .SuiteFinish(suite))
+  reporter.trigger(event: .suiteFinish(suite))
 }
 
 func runExample(_ example: Example, _ suite: Suite) throws -> () throws -> Void {
-	return {
-		reporter.trigger(event: .ExampleStart(example))
+  return {
+    reporter.trigger(event: .exampleStart(example))
 
-		try runBeforeHooks(suite: suite)
-		try example.fn()
-		try runAfterHooks(suite: suite)
+    try example.timer.measure {
+      try runBeforeHooks(suite: suite)
+      try example.fn()
+      try runAfterHooks(suite: suite)
+    }
 
-		reporter.trigger(event: .ExampleFinish(example))
-	}
+    reporter.trigger(event: .exampleFinish(example))
+  }
 }
 
 func runBeforeHooks(suite: Suite) throws {
-	if let parent = suite.parent {
-		try runBeforeHooks(suite: parent)
-	}
+  if let parent = suite.parent {
+    try runBeforeHooks(suite: parent)
+  }
 
-	for hook in suite.beforeHooks { try hook() }
+  for hook in suite.beforeHooks { try hook() }
 }
 
 func runAfterHooks(suite: Suite) throws {
-	if let parent = suite.parent {
-		try runAfterHooks(suite: parent)
-	}
+  if let parent = suite.parent {
+    try runAfterHooks(suite: parent)
+  }
 
-	for hook in suite.afterHooks { try hook() }
+  for hook in suite.afterHooks { try hook() }
 }
 
 public func run() throws {
-	reporter.trigger(event: .Start)
+  reporter.trigger(event: .start)
 
-	let failures = try rootSuite.children.filter { suite in
-		try runSuite(suite: suite)
-		return suite.status == .Fail
-	}
+  let failures = try rootSuite.children.filter { suite in
+    try runSuite(suite: suite)
+    return suite.status == .fail
+  }
 
-	reporter.trigger(event: .Finish)
-
-	exit(failures.isEmpty ? 0 : 1)
+  reporter.trigger(event: .finish)
+  exit(failures.isEmpty ? 0 : 1)
 }

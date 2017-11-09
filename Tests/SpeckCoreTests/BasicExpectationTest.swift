@@ -6,14 +6,14 @@ class BasicExpectationTest: XCTestCase {
 		let expectation = BasicExpectation()
 		expectation.assert(true, msg: "passed")
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_assertFalseSetsResultStatusToFail() {
 		let expectation = BasicExpectation()
 		expectation.assert(false, msg: "failed")
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 
 	func test_reversedAssertFalseSetsResultStatusToPass() {
@@ -22,7 +22,7 @@ class BasicExpectationTest: XCTestCase {
 		expectation.reversed = true
 		expectation.assert(false, msg: "passed")
 
-		XCTAssertEqual(expectation.status, Status.Pass)
+		XCTAssertEqual(expectation.status, Status.pass)
 	}
 
 	func test_reversedAssertTrueSetsResultStatusToFail() {
@@ -31,7 +31,7 @@ class BasicExpectationTest: XCTestCase {
 		expectation.reversed = true
 		expectation.assert(true, msg: "failed")
 
-		XCTAssertEqual(expectation.status, Status.Fail)
+		XCTAssertEqual(expectation.status, Status.fail)
 	}
 }
 

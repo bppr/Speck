@@ -1,9 +1,0 @@
-box: swiftdocker/swift
-build:
-  steps:
-    - script:
-        name: swift build
-        code: "swift build"
-    - script:
-        name: swift test
-        code: "swift test"

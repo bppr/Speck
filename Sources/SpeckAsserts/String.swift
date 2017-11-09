@@ -2,7 +2,6 @@ import SpeckCore
 
 #if _runtime(_ObjC)
 #else
-// FIXME: Enable if non-objc methods are implemented.
 extension String {
   func hasPrefix(_ prefix: String) -> Bool {
     let end = index(startIndex, offsetBy: prefix.length)
@@ -17,65 +16,65 @@ extension String {
 #endif
 
 public protocol StringExpectable {
-	var asString: String { get }
+  var asString: String { get }
 }
 
-extension String : StringExpectable {
-	public var asString: String { return self }
+extension String: StringExpectable {
+  public var asString: String { return self }
 }
 
-public extension Expectation where Subject : StringExpectable {
-	func to(contain string: String) {
-		assert(
-			subject?.asString.contains(string: string) ?? false,
-			msg: "contain string '\(string)'"
-		)
-	}
+public extension Expectation where Subject: StringExpectable {
+  func to(contain string: String) {
+    assert(
+      subject?.asString.contains(string: string) ?? false,
+      msg: "contain string '\(string)'"
+    )
+  }
 
-	func to(endWith suffix: String) {
-		assert(
-			subject?.asString.hasSuffix(suffix) ?? false,
-			msg: "end with '\(suffix)'"
-		)
-	}
+  func to(endWith suffix: String) {
+    assert(
+      subject?.asString.hasSuffix(suffix) ?? false,
+      msg: "end with '\(suffix)'"
+    )
+  }
 
-	func to(startWith prefix: String) {
-		assert(
-			subject?.asString.hasPrefix(prefix) ?? false,
-			msg: "start with '\(prefix)'"
-		)
-	}
+  func to(startWith prefix: String) {
+    assert(
+      subject?.asString.hasPrefix(prefix) ?? false,
+      msg: "start with '\(prefix)'"
+    )
+  }
 }
 
 private extension String {
-	var length: Int { return self.characters.count }
-	var first: Character? { return self.characters.first }
+  var length: Int { return self.characters.count }
+  var first: Character? { return self.characters.first }
 
-	func contains(string other: String) -> Bool {
-		return self.index(ofString: other) != nil
-	}
+  func contains(string other: String) -> Bool {
+    return self.index(ofString: other) != nil
+  }
 
-	func index(ofString other: String) -> Index? {
-		if other.length == 0 {
-			return nil
-		}
+  func index(ofString other: String) -> Index? {
+    if other.length == 0 {
+      return nil
+    }
 
-		guard let startAt = self.characters.index(of: other.first!) else {
-			return nil
-		}
+    guard let startAt = self.characters.index(of: other.first!) else {
+      return nil
+    }
 
-		var idx = startAt
+    var idx = startAt
 
-		while idx <= self.index(self.endIndex, offsetBy: -other.length) {
-			let fragment = self[idx..<self.index(idx, offsetBy: other.length)]
+    while idx <= self.index(self.endIndex, offsetBy: -other.length) {
+      let fragment = self[idx..<self.index(idx, offsetBy: other.length)]
 
-			if fragment == other {
-				return idx
-			}
+      if fragment == other {
+        return idx
+      }
 
-			idx = self.index(after: idx)
-		}
+      idx = self.index(after: idx)
+    }
 
-		return nil
-	}
+    return nil
+  }
 }

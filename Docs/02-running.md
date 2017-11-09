@@ -1,10 +1,10 @@
 Running Tests
 =============
 
-#### _Important: `Speck` is meant to be used with Swift 3 projects._
+#### _Important: `Speck` is meant to be used with Swift 4 projects._
 
 If you don't know which version of Swift you have, `swift --version` should tell
-you. If you don't see `3.0-dev` (or, `3.0`) somewhere in the output, head
+you. If you don't see `4.0-dev` (or, `4.0`) somewhere in the output, head
 to [swift.org](https://swift.org/download) to get the latest and greatest.
 
 ### Using SwiftPM
@@ -21,16 +21,20 @@ directory, calling it whatever you want.
 Next, add the target to your SwiftPM project:
 
 ```swift
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
-  name: "MyCoolApp",
-  // whatever
+  name: "MyLib",
+  products: [
+    .library(name: "MyLib", targets: ["MyLibCore"]),
+  ],
+  dependencies: [
+    .package(url: "https://github.com/bppr/Speck", from: "0.1.0"),
+  ],
   targets: [
-    .Target(name: "MyCoolLibrary"),
-    .Target(name: "<your-spec-folder-name-here>", dependencies: [
-      .Target(named: "MyCoolLibrary")
-    ])
+    .target(name: "MyLibCore", dependencies: []),
+    .target(name: "MyLibCoreSpecs", deps: ["Speck", "MyLibCore"])
   ]
 )
 ```
@@ -53,7 +57,7 @@ let FirstSpec = describe("addition") {
 import Speck
 
 let SecondSpec = describe("subtraction") {
-  it("subtracts the first number to the second") {
+  it("subtracts the first number from the second") {
     expect(2 - 2).to(equal: 0)
   }
 }
@@ -75,4 +79,6 @@ try Speck.run()
 
 ##### Step 4: Build and Run!
 
-Use `swift build` to build the tests, and then run them by executing your target in the `.build/Debug` folder.
+`swift run MyLibCoreSpecs`
+
+Enjoy!

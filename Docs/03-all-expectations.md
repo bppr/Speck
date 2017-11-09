@@ -146,5 +146,8 @@ expect { try doSomethingDangerous() }.to(throwError: MyErrors.self)
 Assert that the given value has changed to another value
 
 ```swift
-expect { a += 1 }.to(change: { a }, by: 1)
+var a = 0
+
+expect { a += 1 }.to(change: a, by: 1)
+expect { a += 1 }.to(change: a, from: 1, to: 2)
 ```

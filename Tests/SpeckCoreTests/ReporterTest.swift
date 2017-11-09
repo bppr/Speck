@@ -8,7 +8,7 @@ class ReporterTest: XCTestCase {
 		var handlerCalled = false
 
 		reporter.onStart { handlerCalled = true }
-		reporter.trigger(event: .Start)
+		reporter.trigger(event: .start)
 
 		XCTAssert(handlerCalled)
 	}
@@ -17,7 +17,7 @@ class ReporterTest: XCTestCase {
 		var handlerCalled = false
 
 		reporter.onFinish { handlerCalled = true }
-		reporter.trigger(event: .Finish)
+		reporter.trigger(event: .finish)
 
 		XCTAssert(handlerCalled)
 	}
@@ -27,7 +27,7 @@ class ReporterTest: XCTestCase {
 		let suite = Suite(description: "example-suite", fn: {})
 
 		reporter.onSuiteStart { handlerCalledWith = $0 }
-		reporter.trigger(event: .SuiteStart(suite))
+		reporter.trigger(event: .suiteStart(suite))
 
 		XCTAssertEqual(handlerCalledWith, suite)
 	}
@@ -37,7 +37,7 @@ class ReporterTest: XCTestCase {
 		let suite = Suite(description: "example-suite", fn: {})
 
 		reporter.onSuiteFinish { handlerCalledWith = $0 }
-		reporter.trigger(event: .SuiteFinish(suite))
+		reporter.trigger(event: .suiteFinish(suite))
 
 		XCTAssertEqual(handlerCalledWith, suite)
 	}
@@ -47,7 +47,7 @@ class ReporterTest: XCTestCase {
 		let example = Example(description: "example-example", fn: {})
 
 		reporter.onExampleStart { handlerCalledWith = $0 }
-		reporter.trigger(event: .ExampleStart(example))
+		reporter.trigger(event: .exampleStart(example))
 
 		XCTAssertEqual(handlerCalledWith?.description, example.description)
 	}
@@ -57,7 +57,7 @@ class ReporterTest: XCTestCase {
 		let example = Example(description: "example-example", fn: {})
 
 		reporter.onExampleFinish { handlerCalledWith = $0 }
-		reporter.trigger(event: .ExampleFinish(example))
+		reporter.trigger(event: .exampleFinish(example))
 
 		XCTAssertEqual(handlerCalledWith?.description, example.description)
 	}
